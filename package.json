@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "react-scripts start",
-    "storybook": "storybook dev -p 6006",
+    "sb": "storybook dev -p 6116",
     "build-storybook": "storybook build"
   },
   "keywords": [],
