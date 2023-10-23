@@ -3,10 +3,12 @@
   "version": "0.0.1",
   "description": "",
   "main": "index.js",
+  "homepage": "http://asieraduriz.github.io/react-exercise-palette",
   "scripts": {
     "start": "react-scripts start",
     "sb": "storybook dev -p 6116",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "gh-pages-sb": "gh-pages -d storybook-static"
   },
   "keywords": [],
   "author": "",
@@ -40,6 +42,7 @@
     "@storybook/react-webpack5": "7.5.1",
     "@storybook/testing-library": "0.2.2",
     "babel-plugin-named-exports-order": "0.0.2",
+    "gh-pages": "^6.0.0",
     "prop-types": "^15.8.1",
     "storybook": "7.5.1",
     "webpack": "5.89.0"

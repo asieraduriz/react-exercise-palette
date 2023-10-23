@@ -1,5 +1,5 @@
-# Created by https://www.toptal.com/developers/gitignore/api/visualstudiocode,react,reactnative
-# Edit at https://www.toptal.com/developers/gitignore?templates=visualstudiocode,react,reactnative
+# Created by https://www.toptal.com/developers/gitignore/api/storybookjs,visualstudiocode,react,reactnative
+# Edit at https://www.toptal.com/developers/gitignore?templates=storybookjs,visualstudiocode,react,reactnative
 
 ### react ###
 .DS_*
@@ -267,6 +267,12 @@ google-services.json
 # Android Profiling
 *.hprof
 
+### StorybookJs ###
+# gitignore template for the Storybook, UI guide for front apps
+# website: https://storybook.js.org/
+
+storybook-static/
+
 ### VisualStudioCode ###
 .vscode/*
 !.vscode/settings.json
@@ -286,4 +292,4 @@ google-services.json
 .history
 .ionide
 
-# End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,react,reactnative
+# End of https://www.toptal.com/developers/gitignore/api/storybookjs,visualstudiocode,react,reactnative
