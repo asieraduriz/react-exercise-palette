@@ -1,33 +1,31 @@
-import React, { useState } from "react";
 import PropTypes from "prop-types";
-import "./styles.css";
+import { Guess } from "./Guess";
+import { Fade } from "./Fade";
+import { Flip } from "./Flip";
 
 /**
  * Flashcard
  */
-export const Flashcard = ({ question, answer }) => {
-  const [isToggled, setIsToggled] = useState(false);
-
-  return (
-    <div className="flashcard">
-      <div className="flashcard-image"></div>
-      <div className="question">{question}</div>
-    </div>
-  );
+export const Flashcard = ({ answer, type }) => {
+  return {
+    fade: <Fade answer={answer} />,
+    flip: <Flip answer={answer} />,
+    guess: <Guess answer={answer} />,
+  }[type];
 };
 
 Flashcard.propTypes = {
   /**
-   * Question
-   */
-  question: PropTypes.string.isRequired,
-  /**
    * Answer
    */
   answer: PropTypes.string.isRequired,
+  /**
+   * Type
+   */
+  type: PropTypes.oneOf(["fade", "flip", "guess"]),
 };
 
 Flashcard.defaultProps = {
-  question: "Question",
   answer: "Answer",
+  type: "flip",
 };

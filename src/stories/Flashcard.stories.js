@@ -6,6 +6,13 @@ export default {
   parameters: {
     // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/react/configure/story-layout
     layout: "centered",
+    background: "dark",
+  },
+  argTypes: {
+    type: {
+      options: ["flip", "fade", "guess"],
+      control: { type: "radio" },
+    },
   },
   // // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/react/writing-docs/autodocs
   // tags: ["autodocs"],
@@ -15,12 +22,23 @@ export default {
   // },
 };
 
-export const Card = () => <Flashcard />;
+export const Flip = {
+  args: {
+    type: "flip",
+    answer: "answer",
+  },
+};
 
-// More on writing stories with args: https://storybook.js.org/docs/react/writing-stories/args
-// export const Primary = {
-//   args: {
-//     primary: true,
-//     label: "Button",
-//   },
-// };
+export const Fade = {
+  args: {
+    type: "fade",
+    answer: "answer",
+  },
+};
+
+export const Guess = {
+  args: {
+    type: "guess",
+    answer: "answer",
+  },
+};
