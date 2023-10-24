@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import { useRef, useState } from "react";
 import { useToggle } from "../../hooks";
 
-const LETTER_PATTERN = /[A-Za-z-]+/g;
+const LETTER_PATTERN = /[a-zA-Z]/;
 
 export const Guesser = ({ answer }) => {
   const [input, setInput] = useState(Array.from(answer).fill(""));
@@ -11,30 +11,29 @@ export const Guesser = ({ answer }) => {
 
   const checkButtonRef = useRef();
 
-  const moveToNext = (position) => {
-    if (position === answer.length) checkButtonRef.current.focus();
-    else inputRefs[position].current.focus();
-  };
-
   return (
     <div className="guesser">
-      {inputRefs.map((_, index) => (
+      {inputRefs.map((ref, index) => (
         <input
-          ref={inputRefs[index]}
+          ref={ref}
           key={index}
           type="text"
-          defaultValue={input[index]}
-          maxLength={1}
-          size={3}
-          onKeyDown={(e) => {
-            const letter = e.key;
-            if (!LETTER_PATTERN.test(letter)) return;
+          size={2}
+          disabled={answer[index] === "-"}
+          value={answer[index] === "-" ? "-" : input[index]}
+          onChange={(event) => {
+            const letter = event.target.value.slice(-1);
+
+            const matches = LETTER_PATTERN.test(letter);
+            if (!matches) return;
 
             const newInput = Array.from(input);
-            newInput.splice(index, 1, e.target.value);
+            newInput.splice(index, 1, letter);
             setInput(newInput);
-            inputRefs[index].current = e.target.value;
-            moveToNext(index + 1);
+
+            const position = index + 1;
+            if (position === answer.length) checkButtonRef.current.focus();
+            else inputRefs[position].current.focus();
           }}
         />
       ))}
