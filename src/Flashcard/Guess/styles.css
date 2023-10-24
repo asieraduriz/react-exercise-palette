@@ -11,7 +11,6 @@
   background-position: center;
   width: 100%;
   height: 100%;
-  cursor: pointer;
   background-color: #bbb;
   color: black;
 }
@@ -20,4 +19,12 @@
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
+}
+
+.guessed-correctly {
+  background-color: green;
+}
+
+.exists {
+  background-color: goldenrod;
 }
