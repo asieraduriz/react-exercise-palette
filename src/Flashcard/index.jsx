@@ -5,6 +5,7 @@ import { Flip } from "./Flip";
 
 /**
  * Flashcard
+ * @param {("fade" | "flip" | "guess")} type
  */
 export const Flashcard = ({ answer, type }) => {
   return {

@@ -1,4 +1,5 @@
 import classNames from "classnames";
+import PropTypes from "prop-types";
 import { useToggle } from "../../hooks";
 import "./styles.css";
 
@@ -15,4 +16,12 @@ export const Fade = ({ answer }) => {
       </div>
     </div>
   );
+};
+
+Fade.propTypes = {
+  answer: PropTypes.string,
+};
+
+Fade.defaultProps = {
+  answer: "",
 };

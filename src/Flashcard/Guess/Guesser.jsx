@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import PropTypes from "prop-types";
-import { useRef, useState } from "react";
+import { createRef, useRef, useState } from "react";
 import { useToggle } from "../../hooks";
 
 const LETTER_PATTERN = /[a-zA-Z]/;
@@ -8,7 +8,7 @@ const LETTER_PATTERN = /[a-zA-Z]/;
 export const Guesser = ({ answer }) => {
   const { isToggled, toggle } = useToggle();
   const [input, setInput] = useState(Array.from(answer).fill(""));
-  const inputRefs = Array.from(answer, () => useRef(""));
+  const inputRefs = Array.from(answer, () => createRef());
   const checkButtonRef = useRef();
 
   const moveTo = (position) => {

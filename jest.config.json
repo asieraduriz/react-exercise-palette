@@ -1,0 +1,8 @@
+{
+  "testEnvironment": "jsdom",
+  "moduleNameMapper": {
+    "^.+\\.svg$": "jest-svg-transformer",
+    "^.+\\.(css|less|scss)$": ["style-loader", "css-loader"]
+  },
+  "setupFilesAfterEnv": ["<rootDir>/jestSetup.js"]
+}

@@ -1,4 +1,4 @@
-import { Flashcard } from "../Flashcard";
+import { Flashcard } from "../../src/Flashcard";
 
 export default {
   title: "Flashcard",
@@ -20,20 +20,6 @@ export default {
   // argTypes: {
   //   backgroundColor: { control: "color" },
   // },
-};
-
-export const Flip = {
-  args: {
-    type: "flip",
-    answer: "answer",
-  },
-};
-
-export const Fade = {
-  args: {
-    type: "fade",
-    answer: "answer",
-  },
 };
 
 export const Guess = {
