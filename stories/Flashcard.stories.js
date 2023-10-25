@@ -1,4 +1,4 @@
-import { Flashcard } from "../Flashcard";
+import { Flashcard } from "../src/Flashcard";
 
 export default {
   title: "Flashcard",
