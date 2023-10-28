@@ -28,3 +28,11 @@
 .exists {
   background-color: goldenrod;
 }
+
+.hide {
+  display: none;
+}
+
+.conceal {
+  visibility: hidden;
+}

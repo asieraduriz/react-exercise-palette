@@ -12,9 +12,9 @@ export const Flip = ({ answer }) => {
 
   return (
     <div className="flip-card">
-      <div className={className} onClick={toggle}>
+      <div className={className} onClick={toggle} role="flashcard-clue">
         <div className="flip-card-front"></div>
-        <div className="flip-card-back">
+        <div className="flip-card-back" role="flashcard-answer">
           <p>{answer}</p>
         </div>
       </div>
