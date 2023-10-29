@@ -293,3 +293,6 @@ storybook-static/
 .ionide
 
 # End of https://www.toptal.com/developers/gitignore/api/storybookjs,visualstudiocode,react,reactnative
+/test-results/
+/playwright-report/
+/playwright/.cache/
