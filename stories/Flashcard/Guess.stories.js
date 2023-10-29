@@ -2,8 +2,14 @@ import { userEvent, waitFor, within } from "@storybook/testing-library";
 import { expect } from "@storybook/jest";
 import { Flashcard } from "../../src/Flashcard";
 
+const ANSWER = "abrakadabra";
+const args = {
+  type: "guess",
+  answer: ANSWER,
+};
+
 export default {
-  title: "Flashcard",
+  title: "Flashcard/Guess",
   component: Flashcard,
   parameters: {
     // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/react/configure/story-layout
@@ -22,59 +28,159 @@ export default {
   },
 };
 
-export const Guess = {
-  args: {
-    type: "guess",
-    answer: "answer",
+const WordTyper = async (word, canvas) => {
+  for (let index = 0; index < word.length; index++) {
+    const letter = word[index];
+
+    await waitFor(async () => {
+      await expect(canvas.getAllByRole("term")[index]).toHaveFocus();
+      await userEvent.keyboard(letter);
+    });
+  }
+};
+
+export const Default = { args };
+
+export const NotGuessed = {
+  args,
+  play: async ({ canvasElement }) => {
+    const notGuessedWord = args.answer.replaceAll(/./g, "z");
+
+    const canvas = within(canvasElement);
+
+    await WordTyper(notGuessedWord, canvas);
+
+    await waitFor(async () => {
+      await userEvent.click(canvas.getByRole("guessed-check"));
+    });
+
+    const letters = canvas.getAllByRole("term");
+
+    await waitFor(() => {
+      letters.forEach((letter) => expect(letter).toBeEnabled());
+      expect(canvas.getByRole("guessed-check")).toBeVisible();
+    });
   },
 };
 
-Guess.play = async ({ canvasElement }) => {
-  const canvas = within(canvasElement);
+export const HalfGuessedHalfWrong = {
+  args,
+  play: async ({ canvasElement }) => {
+    const notGuessedWord = args.answer.replace("abra", "zzzz");
 
-  await waitFor(async () => {
-    await expect(canvas.getAllByRole("term")[0]).toHaveFocus();
-  });
+    const canvas = within(canvasElement);
 
-  await userEvent.keyboard("a");
+    await WordTyper(notGuessedWord, canvas);
 
-  await waitFor(async () => {
-    await expect(canvas.getAllByRole("term")[1]).toHaveFocus();
-    await userEvent.keyboard("n");
-  });
+    await waitFor(async () => {
+      await userEvent.click(canvas.getByRole("guessed-check"));
+    });
 
-  await waitFor(async () => {
-    await expect(canvas.getAllByRole("term")[2]).toHaveFocus();
-    await userEvent.keyboard("s");
-  });
+    const incorrectLetters = canvas.getAllByRole("term");
+    const correctLetters = incorrectLetters.splice(4);
 
-  await waitFor(async () => {
-    await expect(canvas.getAllByRole("term")[3]).toHaveFocus();
-    await userEvent.keyboard("w");
-  });
+    await waitFor(() => {
+      incorrectLetters.forEach((letter) => expect(letter).toBeEnabled());
+      correctLetters.forEach((letter) => expect(letter).toBeDisabled());
 
-  await waitFor(async () => {
-    await expect(canvas.getAllByRole("term")[4]).toHaveFocus();
-    await userEvent.keyboard("e");
-  });
+      expect(canvas.getByRole("guessed-check")).toBeVisible();
+    });
+  },
+};
 
-  await waitFor(async () => {
-    await expect(canvas.getAllByRole("term")[5]).toHaveFocus();
-    await userEvent.keyboard("r");
-  });
+export const HalfGuessedHalfMissed = {
+  args,
+  play: async ({ canvasElement }) => {
+    const notGuessedWord = "kadabraabra";
 
-  await waitFor(async () => {
-    await expect(canvas.getByRole("guessed-check")).toHaveFocus();
+    const canvas = within(canvasElement);
 
-    await userEvent.click(canvas.getByRole("guessed-check"));
-  });
+    await WordTyper(notGuessedWord, canvas);
 
-  const letters = canvas.getAllByRole("term");
+    await waitFor(async () => {
+      await userEvent.click(canvas.getByRole("guessed-check"));
+    });
 
-  await waitFor(() => {
-    letters.forEach((letter) => expect(letter).toBeDisabled());
-    expect(
-      canvas.getByRole("guessed-check", { hidden: true })
-    ).not.toBeVisible();
-  });
+    const incorrectLetters = canvas.getAllByRole("term");
+    const correctLetters = incorrectLetters.splice(4);
+
+    await waitFor(() => {
+      incorrectLetters.forEach((letter) => expect(letter).toBeEnabled());
+      correctLetters.forEach((letter) => expect(letter).toBeDisabled());
+
+      expect(canvas.getByRole("guessed-check")).toBeVisible();
+    });
+  },
+};
+
+export const HalfGuessedExtraRepeated = {
+  args,
+  play: async ({ canvasElement }) => {
+    const notGuessedWord = "kbbakbbabba";
+
+    const canvas = within(canvasElement);
+
+    await WordTyper(notGuessedWord, canvas);
+
+    await waitFor(async () => {
+      await userEvent.click(canvas.getByRole("guessed-check"));
+    });
+
+    const incorrectLetters = canvas.getAllByRole("term");
+    const correctLetters = incorrectLetters.splice(4);
+
+    await waitFor(() => {
+      incorrectLetters.forEach((letter) => expect(letter).toBeEnabled());
+      correctLetters.forEach((letter) => expect(letter).toBeDisabled());
+
+      expect(canvas.getByRole("guessed-check")).toBeVisible();
+    });
+  },
+};
+
+export const GuessedAndMissed = {
+  args,
+  play: async ({ canvasElement }) => {
+    const word = "bbrrkzdzbzz";
+
+    const canvas = within(canvasElement);
+
+    await WordTyper(word, canvas);
+
+    await waitFor(async () => {
+      await userEvent.click(canvas.getByRole("guessed-check"));
+    });
+
+    const incorrectLetters = canvas.getAllByRole("term");
+    const correctLetters = incorrectLetters.splice(4);
+
+    await waitFor(() => {
+      incorrectLetters.forEach((letter) => expect(letter).toBeEnabled());
+      correctLetters.forEach((letter) => expect(letter).toBeDisabled());
+
+      expect(canvas.getByRole("guessed-check")).toBeVisible();
+    });
+  },
+};
+
+export const Guessed = {
+  args,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    await WordTyper(args.answer, canvas);
+
+    await waitFor(async () => {
+      await userEvent.click(canvas.getByRole("guessed-check"));
+    });
+
+    const letters = canvas.getAllByRole("term");
+
+    await waitFor(() => {
+      letters.forEach((letter) => expect(letter).toBeDisabled());
+      expect(
+        canvas.getByRole("guessed-check", { hidden: true })
+      ).not.toBeVisible();
+    });
+  },
 };

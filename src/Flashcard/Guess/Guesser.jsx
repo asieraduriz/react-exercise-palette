@@ -47,7 +47,7 @@ export const Guesser = ({ answer }) => {
           <input
             ref={ref}
             key={index}
-            role="term"
+            role={isDash ? "contentinfo" : "term"}
             className={classNames({
               "guessed-correctly": isLetterGuessed,
             })}
@@ -71,7 +71,7 @@ export const Guesser = ({ answer }) => {
       })}
       <div className={classNames({ hide: isGuessed })}>
         <button ref={checkButtonRef} onClick={check} role="guessed-check">
-          {isToggled ? "Hide" : "Check"}
+          {isToggled ? "Retry" : "Check"}
         </button>
       </div>
     </div>
