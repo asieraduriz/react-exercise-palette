@@ -12,7 +12,6 @@ export default {
   title: "Flashcard/Guess",
   component: Flashcard,
   parameters: {
-    // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/react/configure/story-layout
     layout: "centered",
     background: "dark",
   },
@@ -41,7 +40,7 @@ const WordTyper = async (word, canvas) => {
 
 export const Default = { args };
 
-export const NotGuessed = {
+export const GuessedNone = {
   args,
   play: async ({ canvasElement }) => {
     const notGuessedWord = args.answer.replaceAll(/./g, "z");
@@ -63,85 +62,11 @@ export const NotGuessed = {
   },
 };
 
-export const HalfGuessedHalfWrong = {
-  args,
-  play: async ({ canvasElement }) => {
-    const notGuessedWord = args.answer.replace("abra", "zzzz");
-
-    const canvas = within(canvasElement);
-
-    await WordTyper(notGuessedWord, canvas);
-
-    await waitFor(async () => {
-      await userEvent.click(canvas.getByRole("guessed-check"));
-    });
-
-    const incorrectLetters = canvas.getAllByRole("term");
-    const correctLetters = incorrectLetters.splice(4);
-
-    await waitFor(() => {
-      incorrectLetters.forEach((letter) => expect(letter).toBeEnabled());
-      correctLetters.forEach((letter) => expect(letter).toBeDisabled());
-
-      expect(canvas.getByRole("guessed-check")).toBeVisible();
-    });
-  },
-};
-
-export const HalfGuessedHalfMissed = {
-  args,
-  play: async ({ canvasElement }) => {
-    const notGuessedWord = "kadabraabra";
-
-    const canvas = within(canvasElement);
-
-    await WordTyper(notGuessedWord, canvas);
-
-    await waitFor(async () => {
-      await userEvent.click(canvas.getByRole("guessed-check"));
-    });
-
-    const incorrectLetters = canvas.getAllByRole("term");
-    const correctLetters = incorrectLetters.splice(4);
-
-    await waitFor(() => {
-      incorrectLetters.forEach((letter) => expect(letter).toBeEnabled());
-      correctLetters.forEach((letter) => expect(letter).toBeDisabled());
-
-      expect(canvas.getByRole("guessed-check")).toBeVisible();
-    });
-  },
-};
-
-export const HalfGuessedExtraRepeated = {
-  args,
-  play: async ({ canvasElement }) => {
-    const notGuessedWord = "kbbakbbabba";
-
-    const canvas = within(canvasElement);
-
-    await WordTyper(notGuessedWord, canvas);
-
-    await waitFor(async () => {
-      await userEvent.click(canvas.getByRole("guessed-check"));
-    });
-
-    const incorrectLetters = canvas.getAllByRole("term");
-    const correctLetters = incorrectLetters.splice(4);
-
-    await waitFor(() => {
-      incorrectLetters.forEach((letter) => expect(letter).toBeEnabled());
-      correctLetters.forEach((letter) => expect(letter).toBeDisabled());
-
-      expect(canvas.getByRole("guessed-check")).toBeVisible();
-    });
-  },
-};
-
 export const GuessedAndMissed = {
   args,
   play: async ({ canvasElement }) => {
     const word = "bbrrkzdzbzz";
+    const evaluatedWord = "bggygbgbgbb";
 
     const canvas = within(canvasElement);
 
@@ -163,7 +88,7 @@ export const GuessedAndMissed = {
   },
 };
 
-export const Guessed = {
+export const AllGuessed = {
   args,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
