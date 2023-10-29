@@ -4,5 +4,10 @@
     "^.+\\.svg$": "jest-svg-transformer",
     "^.+\\.(css|less|scss)$": ["style-loader", "css-loader"]
   },
-  "setupFilesAfterEnv": ["<rootDir>/jestSetup.js"]
+  "setupFilesAfterEnv": ["<rootDir>/jestSetup.js"],
+  "testMatch": [ "**/__tests__/**/*.test.js?(x)" ],
+  "testPathIgnorePatterns": [
+    "/node_modules/",
+    "/__tests__/e2e/"
+  ]
 }
