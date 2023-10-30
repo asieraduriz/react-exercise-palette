@@ -1,8 +1,8 @@
 export const LETTER_STATE = {
-  GUESSING: "guessing",
-  GUESSED: "guessed",
-  ELSEWHERE: "elsewhere",
-  NOWHERE: "nowhere",
+  guessing: "guessing",
+  guessed: "guessed",
+  elsewhere: "elsewhere",
+  nowhere: "nowhere",
 };
 
 export const LETTER_PATTERN = /[a-zA-Z]/;

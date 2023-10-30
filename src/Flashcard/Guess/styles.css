@@ -36,3 +36,13 @@
 .conceal {
   visibility: hidden;
 }
+
+.guesser input[data-guessed-state="guessed"] {
+  background-color: green;
+}
+.guesser input[data-guessed-state="elsewhere"] {
+  background-color: yellow;
+}
+.guesser input[data-guessed-state="nowhere"] {
+  background-color: crimson;
+}

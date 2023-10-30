@@ -3,12 +3,27 @@ import PropTypes from "prop-types";
 import { createRef, useEffect, useRef, useState } from "react";
 import { LETTER_PATTERN, LETTER_STATE } from "./Letter";
 import { useToggle } from "../../hooks";
+import { DashedLetter } from "./DashedLetter";
+import { wordRepetitionCoder } from "../../helpers";
 
+/**
+ *
+ * @param {string} text
+ * @returns {Array<string>} An array of empty characters maintaining the dashes
+ */
+const emptyListKeepingDashes = (text) =>
+  Array.from(text, (c) => (c === "-" ? "-" : ""));
+
+/**
+ * @param {object} props
+ * @param {string} props.answer The string representation of the answer to guess
+ */
 export const Guesser = ({ answer }) => {
-  const { isToggled: isChecking, toggle, off } = useToggle();
-  const [input, setInput] = useState(
-    Array.from(answer, (character) => (character === "-" ? "-" : undefined))
-  );
+  const { isToggled: isGuessing, toggle, on } = useToggle(true);
+  const [input, setInput] = useState(emptyListKeepingDashes(answer));
+
+  const [guessingCodes, setGuessingCodes] = useState(Array(answer.length));
+
   const inputRefs = Array.from(answer, () => createRef());
   const checkButtonRef = useRef();
 
@@ -34,6 +49,8 @@ export const Guesser = ({ answer }) => {
     const inputMatchesAnswer = input.join("") === answer;
 
     setIsGuessed(inputMatchesAnswer);
+    const codes = wordRepetitionCoder(input.join(""), answer);
+    setGuessingCodes(codes);
     toggle();
   };
 
@@ -44,41 +61,31 @@ export const Guesser = ({ answer }) => {
 
         if (isDash) {
           return (
-            <input
-              ref={ref}
-              key={index}
-              role="contentinfo"
-              data-guessed-state={
-                isChecking ? LETTER_STATE.GUESSED : LETTER_STATE.GUESSING
-              }
-              type="text"
-              size={2}
-              disabled
-              defaultValue="-"
-            />
+            <DashedLetter key={index} isGuessing={isGuessing} letterRef={ref} />
           );
         }
-        const isLetterGuessed = isChecking && answer[index] === input[index];
 
         return (
           <input
             ref={ref}
             key={index}
             role="term"
-            className={classNames({
-              "guessed-correctly": isLetterGuessed,
-            })}
             data-guessed-state={
-              isChecking ? LETTER_STATE.GUESSED : LETTER_STATE.GUESSING
+              isGuessing
+                ? LETTER_STATE.guessing
+                : LETTER_STATE[guessingCodes[index]]
             }
             type="text"
             size={2}
-            disabled={isGuessed || isLetterGuessed}
+            disabled={
+              isGuessed ||
+              LETTER_STATE[guessingCodes[index]] === LETTER_STATE.guessed
+            }
             value={input[index]}
             onChange={(event) => {
-              off();
               const letter = event.target.value.slice(-1);
               if (!LETTER_PATTERN.test(letter)) return;
+              on();
 
               const newInput = Array.from(input);
               newInput.splice(index, 1, letter);
@@ -91,7 +98,7 @@ export const Guesser = ({ answer }) => {
       })}
       <div className={classNames({ hide: isGuessed })}>
         <button ref={checkButtonRef} onClick={check} role="guessed-check">
-          {isChecking ? "Retry" : "Check"}
+          {isGuessing ? "Check" : "Retry"}
         </button>
       </div>
     </div>

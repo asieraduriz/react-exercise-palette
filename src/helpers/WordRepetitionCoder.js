@@ -1,3 +1,4 @@
+import { LETTER_STATE } from "../Flashcard/Guess/Letter";
 import { letterFrequencyIn } from "./WordFrequency";
 
 /**
@@ -15,12 +16,12 @@ export const wordRepetitionCoder = (actual, answer) => {
   actual.split("").forEach((actualLetter, index) => {
     const expectedLetter = answer[index];
     if (actualLetter === expectedLetter) {
-      wordTag[index] = "g";
+      wordTag[index] = LETTER_STATE.guessed;
       countedLettersInAnswer[expectedLetter] -= 1;
     }
 
     if (!answer.includes(actualLetter)) {
-      wordTag[index] = "b";
+      wordTag[index] = LETTER_STATE.nowhere;
     }
   });
 
@@ -28,7 +29,7 @@ export const wordRepetitionCoder = (actual, answer) => {
     if (wordTag[index]) return;
 
     const isRepeated = countedLettersInAnswer[letter] > 0;
-    wordTag[index] = isRepeated ? "y" : "b";
+    wordTag[index] = isRepeated ? LETTER_STATE.elsewhere : LETTER_STATE.nowhere;
   });
 
   return wordTag;
