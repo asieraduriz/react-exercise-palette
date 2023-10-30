@@ -6,7 +6,7 @@ import { letterFrequencyIn } from "./WordFrequency";
  *
  * @param {string} actual The guessed word
  * @param {string} answer The expected answer
- * @returns {Array<'b'| 'y' | 'g'>}
+ * @returns {LetterState[]}
  */
 
 export const wordRepetitionCoder = (actual, answer) => {

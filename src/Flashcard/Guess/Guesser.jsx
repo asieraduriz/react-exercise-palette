@@ -14,12 +14,14 @@ import { wordRepetitionCoder } from "../../helpers";
 const emptyListKeepingDashes = (text) =>
   Array.from(text, (c) => (c === "-" ? "-" : ""));
 
+const letterIsGuessed = (code) => code === LETTER_STATE.guessed;
+
 /**
  * @param {object} props
  * @param {string} props.answer The string representation of the answer to guess
  */
 export const Guesser = ({ answer }) => {
-  const { isToggled: isGuessing, toggle, on } = useToggle(true);
+  const { isToggled: isGuessing, toggle, on: setGuessing } = useToggle(true);
   const [input, setInput] = useState(emptyListKeepingDashes(answer));
 
   const [guessingCodes, setGuessingCodes] = useState(Array(answer.length));
@@ -46,11 +48,9 @@ export const Guesser = ({ answer }) => {
   }, []);
 
   const check = () => {
-    const inputMatchesAnswer = input.join("") === answer;
-
-    setIsGuessed(inputMatchesAnswer);
     const codes = wordRepetitionCoder(input.join(""), answer);
     setGuessingCodes(codes);
+    setIsGuessed(codes.every(letterIsGuessed));
     toggle();
   };
 
@@ -77,15 +77,16 @@ export const Guesser = ({ answer }) => {
             }
             type="text"
             size={2}
+            onFocus={() => ref.current.select()}
             disabled={
-              isGuessed ||
+              !isGuessing &&
               LETTER_STATE[guessingCodes[index]] === LETTER_STATE.guessed
             }
             value={input[index]}
             onChange={(event) => {
               const letter = event.target.value.slice(-1);
               if (!LETTER_PATTERN.test(letter)) return;
-              on();
+              setGuessing();
 
               const newInput = Array.from(input);
               newInput.splice(index, 1, letter);

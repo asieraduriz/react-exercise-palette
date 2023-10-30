@@ -11,6 +11,8 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "sb": "storybook dev -p 6006",
+    "sb-test": "test-storybook",
+    "sb-test:watch": "test-storybook --watch",
     "sb-build": "storybook build",
     "sb-preview": "npx http-server ./storybook-static",
     "sb-publish": "touch ./storybook-static/.nojekyll && gh-pages -d storybook-static -t true"
@@ -26,6 +28,7 @@
     "@storybook/jest": "^0.2.3",
     "@storybook/react": "^7.5.1",
     "@storybook/react-vite": "^7.5.1",
+    "@storybook/test-runner": "^0.13.0",
     "@storybook/testing-library": "^0.2.2",
     "@testing-library/jest-dom": "^6.1.4",
     "@testing-library/react": "^14.0.0",

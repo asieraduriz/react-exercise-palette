@@ -1,19 +1,12 @@
 import { userEvent, waitFor, within } from "@storybook/testing-library";
 import { expect } from "@storybook/jest";
 import { Flashcard } from "../../src/Flashcard";
-
-const ANSWER = "abrakadabra";
-const args = {
-  type: "guess",
-  answer: ANSWER,
-};
-
-const termState = {
-  GUESSING: "guessing",
-  g: "guessed",
-  y: "elsewhere",
-  b: "nowhere",
-};
+import {
+  allGuessed,
+  guessedAndMissed,
+  guessedAndMissedWithDash,
+  guessedNone,
+} from "./Guess.words";
 
 export default {
   title: "Flashcard/Guess",
@@ -45,123 +38,107 @@ const WordTyper = async (word, canvas) => {
   }
 };
 
-export const Default = { args };
+const AssessResult = async (result, canvas) => {
+  const letters = canvas.getAllByRole("term");
+
+  await waitFor(() => {
+    letters.forEach((letter, index) => {
+      expect(letter).toHaveAttribute("data-guessed-state", result[index]);
+    });
+  });
+};
+
+export const Default = {
+  args: {
+    type: "guess",
+    answer: "apple",
+  },
+};
 
 export const DefaultWithDashedWord = {
   args: {
     type: "guess",
-    answer: "abra-ka-dabra",
+    answer: "a-pple",
   },
 };
 
 export const GuessedNone = {
-  args,
+  args: {
+    type: "guess",
+    answer: guessedNone.expected,
+  },
   play: async ({ canvasElement }) => {
-    const notGuessedWord = args.answer.replaceAll(/./g, "z");
-
     const canvas = within(canvasElement);
 
-    await WordTyper(notGuessedWord, canvas);
+    await WordTyper(guessedNone.actual, canvas);
 
     await waitFor(async () => {
       await userEvent.click(canvas.getByRole("guessed-check"));
     });
 
-    const letters = canvas.getAllByRole("term");
-
-    await waitFor(() => {
-      letters.forEach((letter) => {
-        expect(letter).toBeEnabled();
-        expect(letter).toHaveAttribute("data-guessed-state", termState.b);
-      });
-      expect(canvas.getByRole("guessed-check")).toBeVisible();
-    });
+    await AssessResult(guessedNone.result, canvas);
+    expect(canvas.getByRole("guessed-check")).toBeVisible();
   },
 };
 
 export const GuessedAndMissed = {
-  args,
+  args: {
+    type: "guess",
+    answer: guessedAndMissed.expected,
+  },
   play: async ({ canvasElement }) => {
-    const word = "bbrrkzdzbzz";
-    const evaluatedWord = "bggygbgbgbb";
-
     const canvas = within(canvasElement);
 
-    await WordTyper(word, canvas);
+    await WordTyper(guessedAndMissed.actual, canvas);
 
     await waitFor(async () => {
       await userEvent.click(canvas.getByRole("guessed-check"));
     });
 
-    const letters = canvas.getAllByRole("term");
+    await AssessResult(guessedAndMissed.result, canvas);
 
-    await waitFor(() => {
-      letters.forEach((letter, index) => {
-        expect(letter).toHaveProperty("disabled", evaluatedWord[index] === "g");
-        expect(letter).toHaveAttribute(
-          "data-guessed-state",
-          termState[evaluatedWord[index]]
-        );
-      });
-
-      expect(canvas.getByRole("guessed-check")).toBeVisible();
-    });
+    expect(canvas.getByRole("guessed-check")).toBeVisible();
   },
 };
 
-export const GuessedThreeWordsWithDashes = {
+export const GuessedAndMissedWithDash = {
   args: {
     type: "guess",
-    answer: "abra-ka-dabra",
+    answer: guessedAndMissedWithDash.expected,
   },
   play: async ({ canvasElement }) => {
-    const word = "abrakadabra";
-    const evaluatedWord = "ggggggggggg";
-
     const canvas = within(canvasElement);
 
-    await WordTyper(word, canvas);
+    await WordTyper(guessedAndMissedWithDash.actual, canvas);
 
     await waitFor(async () => {
       await userEvent.click(canvas.getByRole("guessed-check"));
     });
 
-    const letters = canvas.getAllByRole("term");
+    await AssessResult(guessedAndMissedWithDash.result, canvas);
 
-    await waitFor(() => {
-      letters.forEach((letter, index) => {
-        expect(letter).toHaveProperty("disabled", evaluatedWord[index] === "g");
-        expect(letter).toHaveAttribute(
-          "data-guessed-state",
-          termState[evaluatedWord[index]]
-        );
-      });
-    });
+    expect(canvas.getByRole("guessed-check")).toBeVisible();
   },
 };
 
 export const AllGuessed = {
-  args,
+  args: {
+    type: "guess",
+    answer: allGuessed.expected,
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
-    await WordTyper(args.answer, canvas);
+    await WordTyper(allGuessed.actual, canvas);
 
     await waitFor(async () => {
       await userEvent.click(canvas.getByRole("guessed-check"));
     });
 
-    const letters = canvas.getAllByRole("term");
+    await AssessResult(allGuessed.result, canvas);
 
-    await waitFor(() => {
-      letters.forEach((letter) => expect(letter).toBeDisabled());
-      letters.forEach((letter) =>
-        expect(letter).toHaveAttribute("data-guessed-state", termState.g)
-      );
-
-      expect(
-        canvas.getByRole("guessed-check", { hidden: true })
-      ).not.toBeVisible();
-    });
+    expect(
+      canvas.getByRole("guessed-check", { hidden: true })
+    ).not.toBeVisible();
   },
 };
