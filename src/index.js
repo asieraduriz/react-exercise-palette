@@ -1,3 +1,1 @@
-import { Flashcard } from "./Flashcard";
-
-export { Flashcard };
+export * from "./Flashcard";

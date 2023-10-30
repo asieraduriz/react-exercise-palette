@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { useToggle } from "../../hooks";
 import "./styles.css";
 
-export const Flip = ({ answer }) => {
+export const FlipFlashcard = ({ answer }) => {
   const { isToggled, toggle } = useToggle();
 
   const className = classNames("flip-card-inner", {
@@ -22,10 +22,10 @@ export const Flip = ({ answer }) => {
   );
 };
 
-Flip.propTypes = {
+FlipFlashcard.propTypes = {
   answer: PropTypes.string,
 };
 
-Flip.defaultProps = {
+FlipFlashcard.defaultProps = {
   answer: "",
 };
