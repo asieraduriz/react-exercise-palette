@@ -1,3 +1,4 @@
-import { wordCounter } from "./WordCounter";
+import { letterFrequencyIn } from "./WordFrequency";
+import { wordRepetitionCoder } from "./WordRepetitionCoder";
 
-export { wordCounter };
+export { letterFrequencyIn, wordRepetitionCoder };

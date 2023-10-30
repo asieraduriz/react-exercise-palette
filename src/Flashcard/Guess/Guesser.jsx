@@ -5,8 +5,15 @@ import { useToggle } from "../../hooks";
 
 const LETTER_PATTERN = /[a-zA-Z]/;
 
+const termState = {
+  GUESSING: "guessing",
+  GUESSED: "guessed",
+  ELSEWHERE: "elsewhere",
+  NOWHERE: "nowhere",
+};
+
 export const Guesser = ({ answer }) => {
-  const { isToggled, toggle, off } = useToggle();
+  const { isToggled: isChecking, toggle, off } = useToggle();
   const [input, setInput] = useState(Array.from(answer).fill(""));
   const inputRefs = Array.from(answer, () => createRef());
   const checkButtonRef = useRef();
@@ -41,7 +48,7 @@ export const Guesser = ({ answer }) => {
       {inputRefs.map((ref, index) => {
         const isDash = answer[index] === "-";
 
-        const isLetterGuessed = isToggled && answer[index] === input[index];
+        const isLetterGuessed = isChecking && answer[index] === input[index];
 
         return (
           <input
@@ -51,6 +58,9 @@ export const Guesser = ({ answer }) => {
             className={classNames({
               "guessed-correctly": isLetterGuessed,
             })}
+            data-guessed-state={
+              isChecking ? termState.GUESSED : termState.GUESSING
+            }
             type="text"
             size={2}
             disabled={isDash || isGuessed || isLetterGuessed}
@@ -71,7 +81,7 @@ export const Guesser = ({ answer }) => {
       })}
       <div className={classNames({ hide: isGuessed })}>
         <button ref={checkButtonRef} onClick={check} role="guessed-check">
-          {isToggled ? "Retry" : "Check"}
+          {isChecking ? "Retry" : "Check"}
         </button>
       </div>
     </div>

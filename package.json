@@ -9,6 +9,7 @@
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "test": "jest",
+    "test:watch": "jest --watch",
     "sb": "storybook dev -p 6006",
     "sb-build": "storybook build",
     "sb-preview": "npx http-server ./storybook-static",

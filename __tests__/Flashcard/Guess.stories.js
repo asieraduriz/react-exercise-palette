@@ -8,6 +8,13 @@ const args = {
   answer: ANSWER,
 };
 
+const termState = {
+  GUESSING: "guessing",
+  g: "guessed",
+  y: "elsewhere",
+  b: "nowhere",
+};
+
 export default {
   title: "Flashcard/Guess",
   component: Flashcard,
@@ -56,7 +63,10 @@ export const GuessedNone = {
     const letters = canvas.getAllByRole("term");
 
     await waitFor(() => {
-      letters.forEach((letter) => expect(letter).toBeEnabled());
+      letters.forEach((letter) => {
+        expect(letter).toBeEnabled();
+        expect(letter).toHaveAttribute("data-guessed-state", termState.b);
+      });
       expect(canvas.getByRole("guessed-check")).toBeVisible();
     });
   },
@@ -76,12 +86,16 @@ export const GuessedAndMissed = {
       await userEvent.click(canvas.getByRole("guessed-check"));
     });
 
-    const incorrectLetters = canvas.getAllByRole("term");
-    const correctLetters = incorrectLetters.splice(4);
+    const letters = canvas.getAllByRole("term");
 
     await waitFor(() => {
-      incorrectLetters.forEach((letter) => expect(letter).toBeEnabled());
-      correctLetters.forEach((letter) => expect(letter).toBeDisabled());
+      letters.forEach((letter, index) => {
+        expect(letter).toHaveProperty("disabled", evaluatedWord[index] === "g");
+        expect(letter).toHaveAttribute(
+          "data-guessed-state",
+          termState[evaluatedWord[index]]
+        );
+      });
 
       expect(canvas.getByRole("guessed-check")).toBeVisible();
     });
@@ -103,6 +117,10 @@ export const AllGuessed = {
 
     await waitFor(() => {
       letters.forEach((letter) => expect(letter).toBeDisabled());
+      letters.forEach((letter) =>
+        expect(letter).toHaveAttribute("data-guessed-state", termState.g)
+      );
+
       expect(
         canvas.getByRole("guessed-check", { hidden: true })
       ).not.toBeVisible();
