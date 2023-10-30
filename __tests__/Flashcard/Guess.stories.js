@@ -47,6 +47,13 @@ const WordTyper = async (word, canvas) => {
 
 export const Default = { args };
 
+export const DefaultWithDashedWord = {
+  args: {
+    type: "guess",
+    answer: "abra-ka-dabra",
+  },
+};
+
 export const GuessedNone = {
   args,
   play: async ({ canvasElement }) => {
@@ -98,6 +105,37 @@ export const GuessedAndMissed = {
       });
 
       expect(canvas.getByRole("guessed-check")).toBeVisible();
+    });
+  },
+};
+
+export const GuessedThreeWordsWithDashes = {
+  args: {
+    type: "guess",
+    answer: "abra-ka-dabra",
+  },
+  play: async ({ canvasElement }) => {
+    const word = "abrakadabra";
+    const evaluatedWord = "ggggggggggg";
+
+    const canvas = within(canvasElement);
+
+    await WordTyper(word, canvas);
+
+    await waitFor(async () => {
+      await userEvent.click(canvas.getByRole("guessed-check"));
+    });
+
+    const letters = canvas.getAllByRole("term");
+
+    await waitFor(() => {
+      letters.forEach((letter, index) => {
+        expect(letter).toHaveProperty("disabled", evaluatedWord[index] === "g");
+        expect(letter).toHaveAttribute(
+          "data-guessed-state",
+          termState[evaluatedWord[index]]
+        );
+      });
     });
   },
 };

@@ -1,20 +1,14 @@
 import classNames from "classnames";
 import PropTypes from "prop-types";
 import { createRef, useEffect, useRef, useState } from "react";
+import { LETTER_PATTERN, LETTER_STATE } from "./Letter";
 import { useToggle } from "../../hooks";
-
-const LETTER_PATTERN = /[a-zA-Z]/;
-
-const termState = {
-  GUESSING: "guessing",
-  GUESSED: "guessed",
-  ELSEWHERE: "elsewhere",
-  NOWHERE: "nowhere",
-};
 
 export const Guesser = ({ answer }) => {
   const { isToggled: isChecking, toggle, off } = useToggle();
-  const [input, setInput] = useState(Array.from(answer).fill(""));
+  const [input, setInput] = useState(
+    Array.from(answer, (character) => (character === "-" ? "-" : undefined))
+  );
   const inputRefs = Array.from(answer, () => createRef());
   const checkButtonRef = useRef();
 
@@ -48,23 +42,39 @@ export const Guesser = ({ answer }) => {
       {inputRefs.map((ref, index) => {
         const isDash = answer[index] === "-";
 
+        if (isDash) {
+          return (
+            <input
+              ref={ref}
+              key={index}
+              role="contentinfo"
+              data-guessed-state={
+                isChecking ? LETTER_STATE.GUESSED : LETTER_STATE.GUESSING
+              }
+              type="text"
+              size={2}
+              disabled
+              defaultValue="-"
+            />
+          );
+        }
         const isLetterGuessed = isChecking && answer[index] === input[index];
 
         return (
           <input
             ref={ref}
             key={index}
-            role={isDash ? "contentinfo" : "term"}
+            role="term"
             className={classNames({
               "guessed-correctly": isLetterGuessed,
             })}
             data-guessed-state={
-              isChecking ? termState.GUESSED : termState.GUESSING
+              isChecking ? LETTER_STATE.GUESSED : LETTER_STATE.GUESSING
             }
             type="text"
             size={2}
-            disabled={isDash || isGuessed || isLetterGuessed}
-            value={isDash ? "-" : input[index]}
+            disabled={isGuessed || isLetterGuessed}
+            value={input[index]}
             onChange={(event) => {
               off();
               const letter = event.target.value.slice(-1);
