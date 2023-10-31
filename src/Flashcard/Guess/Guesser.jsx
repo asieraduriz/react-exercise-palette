@@ -17,7 +17,7 @@ const emptyListKeepingDashes = (text) =>
 const letterIsGuessed = (code) => code === LETTER_STATE.guessed;
 
 /**
- * @param {object} props
+ * @param {Object} props
  * @param {string} props.answer The string representation of the answer to guess
  */
 export const Guesser = ({ answer }) => {
