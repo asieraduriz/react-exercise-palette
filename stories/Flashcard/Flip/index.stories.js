@@ -1,6 +1,6 @@
 import { userEvent, within } from "@storybook/testing-library";
 import { expect } from "@storybook/jest";
-import { FlipFlashcard } from "../../src/Flashcard";
+import { FlipFlashcard } from "../../../src/Flashcard";
 
 export default {
   title: "Flashcard/Flip",

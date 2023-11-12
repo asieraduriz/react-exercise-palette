@@ -14,7 +14,7 @@ export const FlipFlashcard = ({ answer }) => {
     <div className="flip-card">
       <div className={className} onClick={toggle} role="flashcard-clue">
         <div className="flip-card-front"></div>
-        <div className="flip-card-back" role="flashcard-answer">
+        <div className="flip-card-back text-red-500" role="flashcard-answer">
           <p>{answer}</p>
         </div>
       </div>
